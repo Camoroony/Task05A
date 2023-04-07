@@ -32,9 +32,19 @@ class Connect4View: View {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+
+    }
+
+    private fun recalculateDimensions(w: Int = width, h: Int = height) {
+        val diameterX = w/(colCount + (colCount+1)*circleSpacingRatio)
+        val diameterY = h/(rowCount + (rowCount+1)*circleSpacingRatio)
+
+        circleDiameter = minOf(diameterX, diameterY)
+        circleSpacing = circleDiameter*circleSpacingRatio
     }
 
     override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
         val gridLeft: Float = 0f
         val gridTop: Float = 0f
         val gridRight: Float = gridLeft + colCount * (circleDiameter+circleSpacing) + circleSpacing
@@ -42,8 +52,6 @@ class Connect4View: View {
 
         //draw the game board
         canvas?.drawRect(gridLeft, gridTop, gridRight, gridBottom, gridPaint)
-
-        super.onDraw(canvas)
 
         fun drawCircle() {
             val radius = circleDiameter / 2f
@@ -64,16 +72,8 @@ class Connect4View: View {
             }
         }
 
+
     }
 
-
-
-    private fun recalculateDimensions(w: Int = width, h: Int = height) {
-        val diameterX = w/(colCount + (colCount+1)*circleSpacingRatio)
-        val diameterY = h/(rowCount + (rowCount+1)*circleSpacingRatio)
-
-        circleDiameter = minOf(diameterX, diameterY)
-        circleSpacing = circleDiameter*circleSpacingRatio
-    }
 }
 
