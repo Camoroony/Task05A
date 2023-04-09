@@ -16,9 +16,9 @@ class Connect4View: View {
     private val colCount get() = 7
     private val rowCount get() = 10
 
-    private var circleDiameter: Float = 0f
-    private var circleSpacing: Float = 0f
-    private var circleSpacingRatio: Float = 0.2f
+    private var circleDiameter: Float = 77.5f
+    private var circleSpacing: Float = 75f
+    private var circleSpacingRatio: Float = 2f
 
     private val gridPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -30,18 +30,20 @@ class Connect4View: View {
         color = Color.WHITE
     }
 
+
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         val gridLeft: Float = 0f
         val gridTop: Float = 0f
         val gridRight: Float = gridLeft + colCount * (circleDiameter+circleSpacing) + circleSpacing
         val gridBottom: Float = gridTop + rowCount * (circleDiameter+circleSpacing) + circleSpacing
 
         //draw the game board
-        canvas?.drawRect(gridLeft, gridTop, gridRight, gridBottom, gridPaint)
+        canvas.drawRect(gridLeft, gridTop, gridRight, gridBottom, gridPaint)
 
         val radius = circleDiameter / 2f
 
@@ -56,11 +58,11 @@ class Connect4View: View {
                 // Drawing circles uses the center and radius
                 val cx = gridLeft + circleSpacing + ((circleDiameter + circleSpacing) * col) + radius
 
-                canvas?.drawCircle(cx, cy, radius, paint)
+                canvas.drawCircle(cx, cy, radius, paint)
             }
         }
 
-        super.onDraw(canvas)
+
     }
 
     private fun recalculateDimensions(w: Int = width, h: Int = height) {
