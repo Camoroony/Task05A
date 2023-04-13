@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.example.logicofficial.StudentConnect4Game
 
 class Connect4View: View {
     constructor(context: Context?) : super(context)
@@ -16,7 +17,7 @@ class Connect4View: View {
     private val colCount get() = 7
     private val rowCount get() = 10
 
-    private var circleDiameter: Float =0f
+    private var circleDiameter: Float = 0f
     private var circleSpacing: Float = 0f
     private var circleSpacingRatio: Float = 0.2f
 
@@ -24,6 +25,17 @@ class Connect4View: View {
         style = Paint.Style.FILL
         color = Color.BLUE
     }
+
+    private val player1Paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.RED
+    }
+
+    private val player2Paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.YELLOW
+    }
+
 
     private val noPlayerPaint: Paint= Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
