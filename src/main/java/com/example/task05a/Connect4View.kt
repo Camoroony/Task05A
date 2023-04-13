@@ -14,8 +14,16 @@ class Connect4View: View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr)
 
-    private val colCount get() = 7
-    private val rowCount get() = 10
+    var game: StudentConnect4Game = StudentConnect4Game()
+        set(value) {
+            field = value
+            // After the new value is set, make sure to recalculate sizes and then trigger a redraw
+            recalculateDimensions()
+            invalidate()
+        }
+
+    private val colCount:Int get() = game.columns
+    private val rowCount:Int get() = game.rows
 
     private var circleDiameter: Float = 0f
     private var circleSpacing: Float = 0f
