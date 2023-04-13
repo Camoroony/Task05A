@@ -16,9 +16,9 @@ class Connect4View: View {
     private val colCount get() = 7
     private val rowCount get() = 10
 
-    private var circleDiameter: Float = 77.5f
-    private var circleSpacing: Float = 75f
-    private var circleSpacingRatio: Float = 2f
+    private var circleDiameter: Float =0f
+    private var circleSpacing: Float = 0f
+    private var circleSpacingRatio: Float = 0.2f
 
     private val gridPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -30,10 +30,19 @@ class Connect4View: View {
         color = Color.WHITE
     }
 
+    private fun recalculateDimensions(w: Int = width, h: Int = height) {
+        val diameterX = w/(colCount + (colCount+1)*circleSpacingRatio)
+        val diameterY = h/(rowCount + (rowCount+1)*circleSpacingRatio)
+
+        circleDiameter = minOf(diameterX, diameterY)
+        circleSpacing = circleDiameter*circleSpacingRatio
+    }
+
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        recalculateDimensions(w,h)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -61,17 +70,6 @@ class Connect4View: View {
                 canvas.drawCircle(cx, cy, radius, paint)
             }
         }
-
-
     }
-
-    private fun recalculateDimensions(w: Int = width, h: Int = height) {
-        val diameterX = w/(colCount + (colCount+1)*circleSpacingRatio)
-        val diameterY = h/(rowCount + (rowCount+1)*circleSpacingRatio)
-
-        circleDiameter = minOf(diameterX, diameterY)
-        circleSpacing = circleDiameter*circleSpacingRatio
-    }
-
 }
 
