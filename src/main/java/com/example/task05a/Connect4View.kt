@@ -5,7 +5,10 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.GestureDetectorCompat
 import com.example.logicofficial.StudentConnect4Game
 
 class Connect4View: View {
@@ -14,13 +17,13 @@ class Connect4View: View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr)
 
-    var game: StudentConnect4Game = StudentConnect4Game()
+    var game: StudentConnect4Game = StudentConnect4Game(7, 10)
         set(value) {
-            field = value
-            // After the new value is set, make sure to recalculate sizes and then trigger a redraw
-            recalculateDimensions()
-            invalidate()
-        }
+          field = value
+          // After the new value is set, make sure to recalculate sizes and then trigger a redraw
+          recalculateDimensions()
+          invalidate()
+       }
 
     private val colCount:Int get() = game.columns
     private val rowCount:Int get() = game.rows
@@ -45,7 +48,7 @@ class Connect4View: View {
     }
 
 
-    private val noPlayerPaint: Paint= Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val noPlayerPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         color = Color.WHITE
     }
@@ -76,20 +79,46 @@ class Connect4View: View {
 
         val radius = circleDiameter / 2f
 
-        for (row in 0 until rowCount) {
-            // The vertical center is the same for each circle in the row
-            val cy = gridTop + circleSpacing + ((circleDiameter + circleSpacing) * row) + radius
-
-            for (col in 0 until colCount) {
-                // We will later on want to use the game data to determine this
-                val paint = noPlayerPaint
+        for (col in 0 until colCount) {
+            for (row in 0 until rowCount) {
+                // Set the paint based upon the token at the position
+                val paint = when (game.getToken(col, row)) {
+                    1 -> player1Paint
+                    2 -> player2Paint
+                    else -> noPlayerPaint
+                }
 
                 // Drawing circles uses the center and radius
-                val cx = gridLeft + circleSpacing + ((circleDiameter + circleSpacing) * col) + radius
+                val cx = circleSpacing + ((circleDiameter + circleSpacing) * col) + radius
+                val cy = circleSpacing + ((circleDiameter + circleSpacing) * row) + radius
 
                 canvas.drawCircle(cx, cy, radius, paint)
             }
         }
     }
+
+    private val gestureDetector = GestureDetectorCompat(context, object:
+        GestureDetector.SimpleOnGestureListener() {
+
+        override fun onDown(e: MotionEvent): Boolean = true
+
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            val columnTouched = ((e.x - circleSpacing * 0.5f) / (circleSpacing + circleDiameter)).toInt()
+
+            if (columnTouched in 0 until game.columns) {
+                game.playToken(columnTouched, game.playerTurn)
+                invalidate()
+                return true
+            } else {
+                return false
+            }
+        }
+    })
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
+    }
+
+
 }
 
